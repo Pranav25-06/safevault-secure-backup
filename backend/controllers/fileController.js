@@ -46,4 +46,43 @@ const getUserFiles = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
-module.exports = { uploadFile,getUserFiles };
+
+
+// Download latest version
+const downloadFile = async (req, res) => {
+  try {
+    const fileId = req.params.id;
+    const file = await File.findById(fileId);
+
+    if (!file) {
+      return res.status(404).json({ error: 'File not found' });
+    }
+
+    const filePath = path.join(__dirname, '..', 'uploads', file.storedName);
+    res.download(filePath, file.originalName);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Download failed' });
+  }
+};
+
+// Download specific version
+const restoreFileVersion = async (req, res) => {
+  try {
+    const { originalName, version } = req.body;
+    const userId = req.user.id;
+
+    const file = await File.findOne({ userId, originalName, version });
+    if (!file) {
+      return res.status(404).json({ error: 'Version not found' });
+    }
+
+    const filePath = path.join(__dirname, '..', 'uploads', file.storedName);
+    res.download(filePath, file.originalName);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Restore failed' });
+  }
+};
+
+module.exports = { uploadFile,getUserFiles,downloadFile,restoreFileVersion };
