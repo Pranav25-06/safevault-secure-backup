@@ -34,16 +34,3 @@ SafeVault is a cloud-inspired file backup and recovery web application built usi
 
 ---
 
-## 📸 Screenshots
-
-_Add screenshots here after frontend is complete_
-
----
-
-## 🛠️ Installation
-
-### 🔹 Backend
-```bash
-cd backend
-npm install
-npm run dev
